@@ -1,0 +1,11 @@
+pandas
+numpy
+seaborn
+matplotlib
+Flask
+scikit-learn
+xgboost
+mysql.connector
+cassandra-driver
+joblib
+# -e .
