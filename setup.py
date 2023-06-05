@@ -16,7 +16,7 @@ def get_requirements(file_path:str)->List[str]:
 
 
 setup(
-    name                 = 'mlproject_mushroom',
+    name                 ='mlproject_mushroom',
     version              ='0.1',
     author               ='mahesh',
     author_email         ='amballa.mahesh89@gmail.com',
