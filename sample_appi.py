@@ -41,7 +41,8 @@ logging.info('libraries loaded...')
 loaded_model = joblib.load('files_main\mushroom_final_model.pkl')
 logging.info('Model Loaded..')
 
-app = Flask(__name__)
+appilication = Flask(__name__)
+app = appilication
 
 
 
