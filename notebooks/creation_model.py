@@ -14,19 +14,15 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import VotingClassifier
 import joblib
-from src.logger import logging
 
 def data_cleaning(data):
   #reading data 
   df = pd.read_csv(data)
   print('data read')
-  logging.info('data read')
 
   # droping unecessary features
   df.drop(['veil-type','stalk-root'],axis =1, inplace=True)
   print('unwanted columns dropped')
-  logging.info('unwanted columns dropped')
-
 
   # converting dependent variable to numerics
   df['class'].replace({'p':0,'e':1},inplace = True)
@@ -35,12 +31,10 @@ def data_cleaning(data):
   y = df['class']
   x = df.drop('class',axis =1)
   print('spliting data to independent and dependent variables')
-  logging.info('spliting data to independent and dependent variables')
 
   #one hot encoding of all features
   x_dummed = pd.get_dummies(x,drop_first=True)
   print('Onehot encoding done')
-  logging.info('Onehot encoding done')
 
   # dimentionality reduction by finding the highly corelated columns
   columns = list(x_dummed.columns)
@@ -52,8 +46,6 @@ def data_cleaning(data):
         corr_columns.append(columns[j+1])
   corr_columns = set(corr_columns) 
   print('highly corelated columns found')
-  logging.info('highly corelated columns found')
-
   x_dummed.drop(columns= corr_columns,axis =1, inplace =True)
 
   # dimentionality reduction using lasso
@@ -66,11 +58,14 @@ def data_cleaning(data):
   x_new = x_dummed[features]
   print('highly corelated columns dropped')
   print('final data prepared for training')
-  logging.info('highly corelated columns dropped')
-  logging.info('final data prepared for training')
 
   print(x_new.shape)
   return x_new,y
+
+x_final,y_final= data_cleaning('mushrooms.csv')
+print(x_final.shape)
+print(y_final.shape)
+
 
 def model_creation(x,y):
 
@@ -217,7 +212,6 @@ def model_creation(x,y):
   score_knn = accuracy_score(y_test,model_knn.predict(x_test))
   scores['KNN'] = round(score_knn,2)
   print(scores)
-  logging.info(scores)
 
   #visualization
   plt.figure(figsize= (14,4))
@@ -241,3 +235,13 @@ def model_creation(x,y):
   model_final.fit(x_train,y_train)
   return model_final,scores
 
+
+model,_ = model_creation(x_final,y_final)
+
+x_train,x_test,y_train,y_test = train_test_split(x_final,y_final,test_size = 0.2, random_state =123,stratify =y_final)
+
+y_pred = model.predict(x_test)
+
+print(confusion_matrix(y_test,y_pred))
+
+joblib.dump(model,'mushroom_final_model.pkl')
