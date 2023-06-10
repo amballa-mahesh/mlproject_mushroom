@@ -45,12 +45,6 @@ appilication = Flask(__name__)
 app = appilication
 
 
-
-# @app.route('/user')
-# def welcome():
-#     return render_template('welcome.html')
-
-
 @app.route('/')
 def welcome_user():
     return render_template('index.html')
