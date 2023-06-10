@@ -7,7 +7,6 @@ import logging
 import mysql.connector
 import cassandra
 from datetime import datetime
-from src.logger import logging
 
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
@@ -25,11 +24,11 @@ from cassandra.auth import PlainTextAuthProvider
 # session.execute("insert into predictions(cap_color,odor,gill_spacing,gill_size,gill_color,stalk_shape,stalk_surface_above_ring,stalk_surface_below_ring,stalk_color_above_ring,stalk_color_below_ring,ring_type,spore_print_color,population,habitat,result,time) values('c','d','a','a','a','a','a','a','a','a','a','a','a','a','k',toTimeStamp(now()))")
 # sql confuguration
 
-# mydb = mysql.connector.connect(host = "localhost", user = "root", passwd = "1234",auth_plugin='mysql_native_password', database = 'mushroom_pred_db')
-# my_cursor = mydb.cursor()
+mydb = mysql.connector.connect(host = "localhost", user = "root", passwd = "1234",auth_plugin='mysql_native_password', database = 'mushroom_pred_db')
+my_cursor = mydb.cursor()
 
 
-logging.basicConfig(filename= 'logs',
+logging.basicConfig(filename= 'files_main\logs.log',
                     filemode = 'a',
                     format = '%(asctime)s %(levelname)s-%(message)s',
                     datefmt= '%Y-%m-%d %H:%M:%S',
@@ -38,11 +37,10 @@ logging.basicConfig(filename= 'logs',
 logging.info('libraries loaded...')
 
      
-loaded_model = joblib.load('artifacts/mushroom_final_model.pkl')
+loaded_model = joblib.load('files_main\mushroom_final_model.pkl')
 logging.info('Model Loaded..')
 
-appilication = Flask(__name__)
-app = appilication
+app = Flask(__name__)
 
 
 
@@ -217,14 +215,11 @@ def submit():
      if habitat  == "":
           habitat = 'oth'
 
-     # my_cursor.execute("insert into predictions(cap_color,odor,gill_spacing,gill_size,gill_color,stalk_shape,stalk_surface_above_ring,stalk_surface_below_ring,stalk_color_above_ring,stalk_color_below_ring,ring_type,spore_print_color,population,habitat,result) values('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}');"
-     #                   .format(cap_color,odor,gill_spacing,gill_size,gill_color,stalk_shape,stalk_surface_above_ring,stalk_surface_below_ring,stalk_color_above_ring,stalk_color_below_ring,ring_type,spore_print_color,population,habitat,res))
-     # mydb.commit()  
-     # print('data saved in local MySQL sever......')
-     # logging.info('data saved in local MySQL sever......')
-     
+     my_cursor.execute("insert into predictions(cap_color,odor,gill_spacing,gill_size,gill_color,stalk_shape,stalk_surface_above_ring,stalk_surface_below_ring,stalk_color_above_ring,stalk_color_below_ring,ring_type,spore_print_color,population,habitat,result) values('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}');"
+                       .format(cap_color,odor,gill_spacing,gill_size,gill_color,stalk_shape,stalk_surface_above_ring,stalk_surface_below_ring,stalk_color_above_ring,stalk_color_below_ring,ring_type,spore_print_color,population,habitat,res))
+     mydb.commit()  
 
-    #  time = datetime.now().ctime()
+     time = datetime.now().ctime()
      
 
      
@@ -237,7 +232,7 @@ def submit():
 
 
 if __name__== '__main__':
-    app.run(host = "0.0.0.0")
+    app.run(debug = True)
 
 
 
