@@ -9,4 +9,8 @@ mysql.connector==2.2.9
 cassandra-driver==3.27.0
 joblib==1.2.0
 gunicorn==19.7.1
+<<<<<<< HEAD
 -e .
+=======
+-e .
+>>>>>>> 9e0c8ec0b7d621e6b46db678581bdf30e6f86ca2
