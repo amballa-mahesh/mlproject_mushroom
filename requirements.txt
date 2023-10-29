@@ -8,4 +8,5 @@ xgboost==1.7.5
 mysql.connector==2.2.9
 cassandra-driver==3.27.0
 joblib==1.2.0
+gunicorn==19.7.1
 -e .
